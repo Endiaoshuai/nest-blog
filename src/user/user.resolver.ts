@@ -66,11 +66,12 @@ export class UserResolver {
     return this.userService.save(user);
   }
 
+  @Complexity(1, ["first", "last"])
   @ResolveField(() => PostConnection)
   async posts(
     @Parent() user: User,
     @Args() args: QueryConnectionArgs
   ): Promise<PostConnection> {
-    return this.postService.paginate(args, { user });
+    return this.postService.paginate(args, { author: user });
   }
 }
