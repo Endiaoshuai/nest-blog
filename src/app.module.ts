@@ -14,7 +14,6 @@ import { UserModule } from "./user/user.module";
     ConfigModule.forRoot({ isGlobal: true }),
     LoggerModule.forRoot({
       exclude: [{ method: RequestMethod.ALL, path: "graphql" }],
-      pinoHttp: { prettyPrint: true },
     }),
 
     TypeOrmModule.forRootAsync({

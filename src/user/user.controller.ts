@@ -8,9 +8,10 @@ import {
   Query,
   UseGuards,
 } from "@nestjs/common";
-import { PostService } from "src/post/post.service";
+import { AuthGuard } from "@nestjs/passport";
 
-import { AuthGuard } from "../auth/auth.guard";
+import { PostService } from "../post/post.service";
+import { CurrentUser } from "./decorators/current-user.decorator";
 import { CreateUserInput } from "./inputs/create-user.input";
 import { UpdateUserInput } from "./inputs/update-user.input";
 import { User } from "./user.entity";
@@ -29,7 +30,8 @@ export class UserController {
   async user(@Param() params: { id: string }): Promise<User> {
     const id = params.id;
     console.log("id", id);
-    return this.userService.findOne(id);
+    const user = await this.userService.findOne(id);
+    return user;
   }
 
   @Get("/users")
@@ -48,14 +50,12 @@ export class UserController {
     return this.userService.save(user);
   }
 
-  @UseGuards(AuthGuard)
-  @Put("/user/:id")
+  @UseGuards(AuthGuard("jwt"))
+  @Put("/user")
   async updateUser(
-    @Param() params: { id: string },
+    @CurrentUser() user: User,
     @Body() input: UpdateUserInput
   ): Promise<User> {
-    const user = await this.userService.findOne(params.id);
-
     Object.keys(input).forEach((key) => {
       user[key] = input[key];
     });

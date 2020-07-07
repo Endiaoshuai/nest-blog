@@ -5,7 +5,10 @@ import { User } from "../user.entity";
 
 export const CurrentUser = createParamDecorator(
   (data, ctx: ExecutionContext) => {
-    const request = GqlExecutionContext.create(ctx).getContext().req;
+    const request =
+      GqlExecutionContext.create(ctx).getContext().req ||
+      ctx.switchToHttp().getRequest();
+
     return request.user instanceof User ? request.user : null;
   }
 );
