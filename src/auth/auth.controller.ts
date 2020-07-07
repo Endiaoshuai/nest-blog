@@ -1,25 +1,26 @@
-import { Args, Mutation, Resolver } from "@nestjs/graphql";
+import { Body, Controller, Post } from "@nestjs/common";
 
 import { CurrentUser } from "../user/decorators/current-user.decorator";
 import { User } from "../user/user.entity";
 import { AuthService } from "./auth.service";
+import { LoginInput } from "./input/login.input";
 
-@Resolver()
-export class AuthResolver {
+@Controller("auth")
+export class AuthController {
   constructor(readonly authService: AuthService) {
     return this;
   }
 
-  @Mutation(() => String)
-  async getToken(
-    @Args("email") email: string,
-    @Args("password") password: string
-  ): Promise<string> {
-    const user = await this.authService.validateUser(email, password);
+  @Post("/login")
+  async getToken(@Body() input: LoginInput): Promise<string> {
+    const user = await this.authService.validateUser(
+      input.email,
+      input.password
+    );
     return this.authService.generateToken(user);
   }
 
-  @Mutation(() => String)
+  @Post("refreshToken")
   async refreshToken(@CurrentUser() user: User): Promise<string> {
     return this.authService.generateToken(user);
   }

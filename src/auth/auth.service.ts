@@ -2,18 +2,18 @@ import {
   Injectable,
   NotFoundException,
   UnauthorizedException,
-} from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
-import bcrypt from 'bcryptjs';
+} from "@nestjs/common";
+import { JwtService } from "@nestjs/jwt";
+import bcrypt from "bcryptjs";
 
-import { User } from '../user/user.entity';
-import { UserService } from '../user/user.service';
+import { User } from "../user/user.entity";
+import { UserService } from "../user/user.service";
 
 @Injectable()
 export class AuthService {
   constructor(
     readonly jwtService: JwtService,
-    readonly userService: UserService,
+    readonly userService: UserService
   ) {
     return this;
   }
@@ -24,11 +24,11 @@ export class AuthService {
     });
 
     if (!user) {
-      throw new NotFoundException('The user does not exist.');
+      throw new NotFoundException("The user does not exist.");
     }
 
     if (!(await bcrypt.compare(password, user.password))) {
-      throw new UnauthorizedException('Your password is incorrect.');
+      throw new UnauthorizedException("Your password is incorrect.");
     }
 
     return user;

@@ -1,4 +1,3 @@
-import { Field, ID, ObjectType } from "@nestjs/graphql";
 import bcrypt from "bcryptjs";
 import slugify from "slugify";
 import {
@@ -16,37 +15,29 @@ import {
 
 import { Post } from "../post/post.entity";
 
-@ObjectType()
 @Entity()
 export class User {
-  @Field(() => ID)
   @PrimaryGeneratedColumn({ type: "bigint" })
   id: string;
 
-  @Field()
   @Column()
   name: string;
 
-  @Field()
   @Index()
   @Column()
   slug: string;
 
-  @Field()
   @Index()
   @Column()
   email: string;
 
-  @Field()
   @Column()
   password: string;
 
-  @Field()
   @Index()
   @CreateDateColumn()
   createdAt: Date;
 
-  @Field()
   @Index()
   @UpdateDateColumn()
   updatedAt: Date;

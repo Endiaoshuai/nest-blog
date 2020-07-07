@@ -1,22 +1,22 @@
-import { GraphQLSchemaHost, Plugin } from '@nestjs/graphql';
+import { UnauthorizedException } from "@nestjs/common";
+import { GraphQLSchemaHost, Plugin } from "@nestjs/graphql";
 import {
   ApolloServerPlugin,
   GraphQLRequestListener,
-} from 'apollo-server-plugin-base';
-import { UnauthorizedException } from '@nestjs/common';
+} from "apollo-server-plugin-base";
 import {
   directiveEstimator,
   fieldExtensionsEstimator,
   getComplexity,
   simpleEstimator,
-} from 'graphql-query-complexity';
-import { PinoLogger } from 'nestjs-pino';
+} from "graphql-query-complexity";
+import { PinoLogger } from "nestjs-pino";
 
 @Plugin()
 export class ComplexityPlugin implements ApolloServerPlugin {
   constructor(
     readonly gqlSchemaHost: GraphQLSchemaHost,
-    readonly logger: PinoLogger,
+    readonly logger: PinoLogger
   ) {
     return this;
   }
@@ -35,7 +35,7 @@ export class ComplexityPlugin implements ApolloServerPlugin {
           variables: request.variables,
           estimators: [
             directiveEstimator({
-              name: 'complexity',
+              name: "complexity",
             }),
             fieldExtensionsEstimator(),
             simpleEstimator({ defaultComplexity: 1 }),
@@ -44,13 +44,13 @@ export class ComplexityPlugin implements ApolloServerPlugin {
 
         if (complexity >= maxComplexity) {
           throw new UnauthorizedException(
-            `Query is too complex: ${complexity}. Maximum allowed complexity: ${maxComplexity}`,
+            `Query is too complex: ${complexity}. Maximum allowed complexity: ${maxComplexity}`
           );
         }
 
         this.logger.info(
           { operationName: request.operationName, complexity },
-          'query complexity',
+          "query complexity"
         );
       },
     };

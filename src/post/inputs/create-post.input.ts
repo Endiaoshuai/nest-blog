@@ -1,7 +1,7 @@
-import { Field, ID, InputType } from '@nestjs/graphql';
-import { DeepPartial } from 'typeorm';
+import { Field, ID, InputType } from "@nestjs/graphql";
+import { DeepPartial } from "typeorm";
 
-import { Post } from '../post.entity';
+import { Post } from "../post.entity";
 
 @InputType()
 export class CreatePostInput implements DeepPartial<Post> {

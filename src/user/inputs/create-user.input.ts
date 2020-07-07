@@ -1,7 +1,7 @@
-import { Field, ID, InputType } from '@nestjs/graphql';
-import { DeepPartial } from 'typeorm';
+import { Field, ID, InputType } from "@nestjs/graphql";
+import { DeepPartial } from "typeorm";
 
-import { User } from '../user.entity';
+import { User } from "../user.entity";
 
 @InputType()
 export class CreateUserInput implements DeepPartial<User> {
