@@ -27,39 +27,30 @@ export class UserController {
   }
 
   @Get("/user/:id")
-  async user(@Param() params: { id: string }): Promise<User> {
-    const id = params.id;
+  async user(@Param("id") id: string): Promise<User> {
     console.log("id", id);
-    const user = await this.userService.findOne(id);
+    const user = await this.userService.findOneById(id);
     return user;
   }
 
   @Get("/users")
   async users(@Query() query: { take: number; skip: number }): Promise<User[]> {
-    console.log(query.take, typeof query.take);
-    return this.userService.find({
-      take: query.take,
-      skip: query.skip,
-    });
+    return this.userService.find(query.take, query.skip);
   }
 
   @Post("/user")
   async createUser(@Body() input: CreateUserInput): Promise<User> {
     console.log(input);
-    const user = this.userService.create(input);
-    return this.userService.save(user);
+    return this.userService.createUser(input);
   }
 
+  // 使用守卫， updateUser 这个方法必须通过 jwt 验证
   @UseGuards(AuthGuard("jwt"))
   @Put("/user")
   async updateUser(
     @CurrentUser() user: User,
     @Body() input: UpdateUserInput
   ): Promise<User> {
-    Object.keys(input).forEach((key) => {
-      user[key] = input[key];
-    });
-
-    return this.userService.save(user);
+    return this.userService.updateUser(user, input);
   }
 }
